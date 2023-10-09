@@ -1,0 +1,1 @@
+Functions for all parts of Homework 3. The plotting in Part 1 is also included at the beginning of the script. Each function runs independently, but there may be issues with running the logistic regression function before the kNN script, since I'm appending a bias column to the dataset.
