@@ -269,14 +269,14 @@ def kNN_n(data,N):
 
             #nearest = np.argsort(di)[:N]
             nearest = np.argsort(di)[:(N+1)]
-            ### Also, adding a tiebreaker ?!!
+            ### Adding a tiebreaker ?
             if di[nearest[-1]] == di[nearest[-2]]:
               if train.iloc[nearest[-1]][label] != train.iloc[nearest[-2]][label]:
                   nearest = np.delete(nearest, np.random.choice([-1, -2]))
             else:
                   nearest = np.delete(nearest, -1)
 
-            #Adding weights so that maybe I'll see this dip at k = 5 ?!
+            #Adding weights so that maybe I'll see this dip at k = 5 ?
             weights = 1 / (di[nearest] + 0.001) 
             weighted = np.dot(train.iloc[nearest][label].values, weights)
             avg = weighted / np.sum(weights)
