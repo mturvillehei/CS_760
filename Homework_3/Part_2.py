@@ -389,7 +389,7 @@ def part_5_kNN(data):
     return kNN
 
 def part_5_LR(data, C):
-    epochs = 4
+    epochs = 500
     learning_rate = 0.005
     results = []
     split_size = 1000
