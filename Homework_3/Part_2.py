@@ -253,7 +253,7 @@ def kNN_n(data,N):
     ### Distance metric - Euclidean
     
     for i in range(0, 5):
-        print(f"Iteration {i+1}")
+        print(f"Iteration {i+1} for N = {N}")
         split_indices = [(split_size*i), split_size+(split_size*i)-1]
         #print(split_indices)
 
@@ -266,10 +266,24 @@ def kNN_n(data,N):
             di = np.sqrt(np.sum((train.iloc[:, :-1].values - row1.values[:-1])**2, axis=1))
             
             ### Updated to simply sum the nearest neighbor prediction
-            nearest = np.argsort(di)[:N]
+
+            #nearest = np.argsort(di)[:N]
+            nearest = np.argsort(di)[:(N+1)]
+            ### Also, adding a tiebreaker ?!!
+            if di[nearest[-1]] == di[nearest[-2]]:
+              if train.iloc[nearest[-1]][label] != train.iloc[nearest[-2]][label]:
+                  nearest = np.delete(nearest, np.random.choice([-1, -2]))
+            else:
+                  nearest = np.delete(nearest, -1)
+
+            #Adding weights so that maybe I'll see this dip at k = 5 ?!
+            weights = 1 / (di[nearest] + 0.001) 
+            weighted = np.dot(train.iloc[nearest][label].values, weights)
+            avg = weighted / np.sum(weights)
+
             for k in nearest:
                 su += train.iloc[k][label]
-            avg = su/N
+            #avg = su/N
 
             ### Picking the more common. Since N = 10 is allowed, I'm assuming random for equal P(0), P(1)
             if avg > 0.5:
@@ -300,7 +314,7 @@ def kNN_n(data,N):
 
         recall = TP / (TP + FN)
         ###Results for each k
-        print(f"For split indices {split_indices}, Accuracy = {accuracy}, Precision = {precision}, Recall = {recall}.")
+        print(f"For N = {N}, split indices {split_indices}, Accuracy = {accuracy}, Precision = {precision}, Recall = {recall}.")
         acc += accuracy
         prec += precision
         rec += recall
